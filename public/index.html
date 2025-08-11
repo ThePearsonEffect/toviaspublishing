@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tovias Publishing Toolkit</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; line-height: 1.6; }
+      code { background: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+      a { color: #0b6; }
+    </style>
+  </head>
+  <body>
+    <h2>Tovias Publishing Toolkit</h2>
+    <p>This project is a Python/Flask application. Netlify hosts static sites; it cannot run the Python server directly.</p>
+    <h3>Run locally</h3>
+    <pre><code>python -m venv .venv
+source .venv/Scripts/activate
+pip install -r requirements.txt
+python main.py grammarly
+# Open http://127.0.0.1:5000/designer</code></pre>
+    <h3>Deploy with Docker</h3>
+    <pre><code>docker build -t tovias-publishing .
+docker run -p 8000:8000 --env-file .env tovias-publishing
+# Open http://localhost:8000/designer</code></pre>
+    <h3>Or deploy on a Python-friendly host (Render, Railway, Fly.io, Azure Web Apps, etc.)</h3>
+    <p>Use the provided <code>Dockerfile</code> or <code>Procfile</code>.</p>
+  </body>
+</html>

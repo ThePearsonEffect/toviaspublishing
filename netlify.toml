@@ -1,0 +1,15 @@
+[build]
+  command = "echo 'Netlify cannot directly run Python servers. Use the artifact or deploy Docker elsewhere.'"
+  publish = "public"
+
+[[redirects]]
+  from = "/designer"
+  to = "/index.html"
+  status = 200
+
+# If you deploy the Flask app elsewhere, uncomment and set your backend URL to proxy
+# [[redirects]]
+#   from = "/api/*"
+#   to = "https://your-flask-backend.example.com/:splat"
+#   status = 200
+#   force = true
