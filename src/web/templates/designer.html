@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Designer</title>
+    <style>
+      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; margin: 24px; }
+      .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+      form { border: 1px solid #ddd; padding: 16px; border-radius: 8px; }
+      input, textarea { width: 100%; padding: 8px; margin: 6px 0; }
+      img { max-width: 100%; height: auto; display: block; margin-top: 8px; }
+      .details { white-space: pre-wrap; font-size: 14px; background: #fafafa; padding: 12px; border-radius: 8px; border: 1px solid #eee; }
+      .note { font-size: 12px; color: #666; }
+    </style>
+  </head>
+  <body>
+    <h2>Designer</h2>
+    <div class="grid">
+      <form method="post" action="/upload" enctype="multipart/form-data">
+        <h3>Upload asset</h3>
+        <input type="file" name="file" />
+        <button type="submit">Upload</button>
+        {% if upload_url %}
+          <p>Uploaded: <a href="{{ upload_url }}" target="_blank">{{ upload_url }}</a></p>
+        {% endif %}
+      </form>
+
+      <form method="post" action="/make/cover">
+        <h3>Create Book Cover</h3>
+        <input name="title" placeholder="Title" />
+        <input name="author" placeholder="Author" />
+        <textarea name="quote" placeholder="Quote"></textarea>
+        <button type="submit">Generate Cover</button>
+        {% if cover_url %}
+          <img src="{{ cover_url }}" alt="Cover" />
+          <div class="note">Download: <a href="{{ cover_url }}" target="_blank">{{ cover_url }}</a></div>
+        {% endif %}
+      </form>
+
+      <form method="post" action="/make/tshirt">
+        <h3>Create T‑Shirt Design</h3>
+        <input name="title" placeholder="Title (optional)" />
+        <input name="author" placeholder="Author (for details)" />
+        <textarea name="text" placeholder="Front text"></textarea>
+        <button type="submit">Generate T‑Shirt</button>
+        {% if tshirt_url %}
+          <img src="{{ tshirt_url }}" alt="T-Shirt" />
+          <div class="note">Download: <a href="{{ tshirt_url }}" target="_blank">{{ tshirt_url }}</a></div>
+        {% endif %}
+      </form>
+    </div>
+
+    {% if details %}
+      <h3>Product Details</h3>
+      <div class="details">
+        <strong>Title:</strong> {{ details.title }}
+        <br/><br/>
+        <strong>Description:</strong>
+        <br/>
+        {{ details.description }}
+        <br/><br/>
+        <strong>Tags:</strong> {{ ", ".join(details.tags) }}
+      </div>
+    {% endif %}
+  </body>
+</html>
