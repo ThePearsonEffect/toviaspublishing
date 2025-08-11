@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import re
+import hashlib
 from pathlib import Path
 from typing import Iterable, List
 
@@ -9,6 +10,15 @@ import numpy as np
 import pytesseract
 
 from src.config import config
+from src.utils.cache import memoize
+
+
+def _hash_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(8192), b""):
+            h.update(chunk)
+    return h.hexdigest()
 
 
 def _prepare_image_for_ocr(image_path: Path) -> np.ndarray:
@@ -22,14 +32,24 @@ def _prepare_image_for_ocr(image_path: Path) -> np.ndarray:
     return thresh
 
 
-def extract_text_from_images(image_paths: Iterable[Path]) -> str:
+def _ocr_image_cached(image_path: Path) -> str:
+    file_hash = _hash_file(image_path)
+    key = f"ocr:{file_hash}"
+
+    def run() -> str:
+        processed = _prepare_image_for_ocr(image_path)
+        return pytesseract.image_to_string(processed, lang="eng")
+
     if config.tesseract_cmd:
         pytesseract.pytesseract.tesseract_cmd = config.tesseract_cmd
 
+    return memoize(key, run)
+
+
+def extract_text_from_images(image_paths: Iterable[Path]) -> str:
     texts: List[str] = []
     for path in image_paths:
-        processed = _prepare_image_for_ocr(path)
-        text = pytesseract.image_to_string(processed, lang="eng")
+        text = _ocr_image_cached(path)
         texts.append(text)
     return "\n\n".join(texts)
 
