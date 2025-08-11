@@ -26,5 +26,5 @@ ENV PYTHONUNBUFFERED=1 \
 
 EXPOSE 8000
 
-# Gunicorn app factory target
-CMD ["gunicorn", "src.web.app:create_app()", "--bind", "0.0.0.0:${PORT}", "--workers", "2"]
+# Use shell form so $PORT expands at runtime (Railway/Heroku style)
+CMD ["sh", "-c", "gunicorn 'src.web.app:create_app()' --bind 0.0.0.0:$PORT --workers 2"]
